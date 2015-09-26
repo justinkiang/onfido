@@ -6,8 +6,9 @@ import (
 	"crypto/subtle"
 	"encoding/hex"
 	"encoding/json"
-	"io"
 	"io/ioutil"
+	"net/http"
+	"strings"
 	"time"
 )
 
@@ -42,7 +43,7 @@ type EventTime time.Time
 
 func (et *EventTime) UnmarshalJSON(data []byte) error {
 	var err error
-	t, err := time.Parse(eventTimeFormat, string(data))
+	t, err := time.Parse(eventTimeFormat, strings.Trim(string(data), `"`))
 	*et = EventTime(t)
 	if err != nil {
 		*et = EventTime(time.Time{})
@@ -58,13 +59,21 @@ type Event struct {
 	} `json:"payload"`
 }
 
-func (c *Client) UnmarshalEvent(sig string, body io.Reader) (*Event, error) {
-	b, err := ioutil.ReadAll(body)
+func (c *Client) UnmarshalEvent(r *http.Request) (*Event, error) {
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
 	if c.WebhookToken != "" {
+		parts := strings.Split(r.Header.Get("Headers"), "=>")
+		sig := ""
+		if len(parts) == 2 {
+			sig = parts[1]
+			sig = sig[:len(sig)-2]
+			sig = sig[1:]
+		}
 		if !compareMAC(b, []byte(sig), []byte(c.WebhookToken)) {
 			return nil, ErrBadSignature
 		}
@@ -85,6 +94,5 @@ func compareMAC(message, expectedMAC, key []byte) bool {
 	mac.Write(message)
 	messageMAC := make([]byte, hex.EncodedLen(mac.Size()))
 	hex.Encode(messageMAC, mac.Sum(nil))
-	// fmt.Println(string(expectedMAC), string(messageMAC))
 	return subtle.ConstantTimeCompare(messageMAC, expectedMAC) == 1
 }
