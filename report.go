@@ -84,6 +84,28 @@ var ReportType = struct {
 	},
 }
 
+var ReportStatus = struct {
+	Pending  string
+	Complete string
+}{
+	Pending:  "pending",
+	Complete: "complete",
+}
+
+var ResultKind = struct {
+	Clear        string
+	Consider     string
+	Fail         string
+	Unidentified string
+	None         string
+}{
+	Clear:        "clear",
+	Consider:     "consider",
+	Fail:         "fail",
+	Unidentified: "unidentified",
+	None:         "none",
+}
+
 type Report struct {
 	ID         string                 `json:"id"`
 	Href       string                 `json:"href"`

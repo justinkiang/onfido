@@ -28,6 +28,15 @@ type Check struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+func (c *Check) ReportForName(name string) *Report {
+	for _, v := range c.Reports {
+		if v.Name == name {
+			return v
+		}
+	}
+	return nil
+}
+
 type checksResponse struct {
 	Checks []*Check `json:"checks"`
 }
