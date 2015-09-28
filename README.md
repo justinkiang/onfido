@@ -1,5 +1,5 @@
 # onfido
-A simple Go package for interacting with Onfido.
+A simple Go package for interacting with Onfido. See the [godoc documentation](https://godoc.org/github.com/outdoorsy/onfido) for more info.
 
 This package is nowhere near as complete as I would like it to be. Time constraints have forced me to write only the things that I needed immediately.
 

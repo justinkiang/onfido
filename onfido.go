@@ -1,6 +1,8 @@
 package onfido
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -26,13 +28,25 @@ func init() {
 type Date time.Time
 
 func (d *Date) UnmarshalJSON(data []byte) error {
-	var err error
-	t, err := time.Parse(dateFormat, string(data))
+	var s string
+	err := json.Unmarshal(data, &s)
+	if err != nil {
+		fmt.Println("failed unmarshalling s", err)
+	}
+	t, err := time.Parse(dateFormat, s)
 	*d = Date(t)
 	if err != nil {
-		*d = Date(time.Time{})
+		t, err = time.Parse(time.RFC3339, s)
+		*d = Date(t)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
+}
+
+func (d *Date) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf("\"%s\"", time.Time(*d).Format(dateFormat))), nil
 }
 
 // Client provides methods for interacting with the onfido API

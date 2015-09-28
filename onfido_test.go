@@ -19,7 +19,7 @@ func checkToken(is *is.Is) {
 	}
 }
 
-var nowDate = Date(time.Now())
+var nowDate = Date(time.Now().Add(-5 * time.Hour * 24))
 
 var (
 	testIDNumbers = []IDNumber{
@@ -75,6 +75,8 @@ func TestClientApplicants(t *testing.T) {
 
 	nameNum := rand.Int31()
 
+	nowDate = Date(time.Now().Add(-5 * time.Hour * 24))
+
 	a := &Applicant{
 		Country:   "USA",
 		FirstName: "Tyler" + strconv.Itoa(int(nameNum)),
@@ -112,6 +114,8 @@ func TestClientChecks(t *testing.T) {
 
 	c := New(*token)
 	is.NotNil(c)
+
+	nowDate = Date(time.Now().Add(-5 * time.Hour * 24))
 
 	nameNum := rand.Int31()
 
