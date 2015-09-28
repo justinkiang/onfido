@@ -68,14 +68,6 @@ func (c *Client) UnmarshalEvent(r *http.Request) (*Event, error) {
 
 	if c.WebhookToken != "" {
 		sig := r.Header.Get("X-Signature")
-		if sig == "" {
-			parts := strings.Split(r.Header.Get("Headers"), "=>")
-			if len(parts) == 2 {
-				sig = parts[1]
-				sig = sig[:len(sig)-2]
-				sig = sig[1:]
-			}
-		}
 		if !compareMAC(b, []byte(sig), []byte(c.WebhookToken)) {
 			return nil, ErrBadSignature
 		}

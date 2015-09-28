@@ -19,7 +19,7 @@ func TestEventUnmarshalEvent(t *testing.T) {
 
 	r, err := http.NewRequest("POST", "/webhook", bytes.NewReader(body))
 	is.NotErr(err)
-	r.Header.Set("Headers", `{"X-Signature"=>"8fe7130c7e193b5049daafb507ad246047c69bc4"}`)
+	r.Header.Set("X-Signature", "8fe7130c7e193b5049daafb507ad246047c69bc4")
 
 	event, err := c.UnmarshalEvent(r)
 	is.NotErr(err)
