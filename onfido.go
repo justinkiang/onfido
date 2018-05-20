@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	applicantBaseURL = "https://api.onfido.com/v1/applicants"
-	checkBaseURL     = "https://api.onfido.com/v1/applicants"
+	applicantBaseURL = "https://api.onfido.com/v2/applicants"
+	checkBaseURL     = "https://api.onfido.com/v2/applicants"
+	sdkToeknBaseURL  = "https://api.onfido.com/v2/sdk_token"
 	expandParam      = &url.Values{}
 )
 
@@ -63,6 +64,26 @@ func New(apiToken string) *Client {
 	}
 }
 
+func (c *Client) SDKToken(appID, referrer string) (SDKToken, error) {
+	s := c.newSession()
+	apiErr := APIError{}
+
+	form := url.Values{}
+	form.Add("applicant_id", appID)
+	form.Add("referer", referrer)
+
+	token := SDKToken{}
+	res, err := s.Post(applicantBaseURL, strings.NewReader(form.Encode()), token, &apiErr)
+	if err != nil {
+		return token, err
+	}
+
+	if res.Status() != 201 {
+		return token, &apiErr
+	}
+	return token, nil
+
+}
 func (c *Client) CreateApplicant(a *Applicant) (*Applicant, error) {
 	s := c.newSession()
 	apiErr := APIError{}
