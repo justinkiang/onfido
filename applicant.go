@@ -39,13 +39,13 @@ type Applicant struct {
 	LastName   string     `json:"last_name"`
 	MiddleName string     `json:"middle_name,omitempty"`
 	Email      string     `json:"email,omitempty"`
-	Gender     string     `json:"gender"`
-	Dob        *Date      `json:"dob"`
+	Gender     string     `json:"gender,omitempty"`
+	Dob        *Date      `json:"dob,omitempty"`
 	Country    string     `json:"country,omitempty"`
 	Mobile     string     `json:"mobile,omitempty"`
 	Telephone  string     `json:"telephone,omitempty"`
-	IDNumbers  []IDNumber `json:"id_numbers"`
-	Addresses  []Address  `json:"addresses"`
+	IDNumbers  []IDNumber `json:"id_numbers,omitempty"`
+	Addresses  []Address  `json:"addresses,omitempty"`
 
 	Href      string     `json:"href,omitempty"`
 	CreatedAt *time.Time `json:"created_at,omitempty"`
