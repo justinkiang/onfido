@@ -68,17 +68,21 @@ func (c *Client) SDKToken(appID, referrer string) (SDKToken, error) {
 	s := c.newSession()
 	apiErr := APIError{}
 
-	form := url.Values{}
-	form.Add("applicant_id", appID)
-	form.Add("referer", referrer)
-
 	token := SDKToken{}
-	res, err := s.Post(applicantBaseURL, strings.NewReader(form.Encode()), token, &apiErr)
+	payload := struct{
+		ApplicantId string `json:"applicant_id"`
+		Referrer string `json:"referrer"`
+	}{
+		appID,
+		referrer,
+	}
+	res, err := s.Post(sdkToeknBaseURL, payload, &token, &apiErr)
 	if err != nil {
+		fmt.Println(err.Error())
 		return token, err
 	}
 
-	if res.Status() != 201 {
+	if res.Status() != 200 {
 		return token, &apiErr
 	}
 	return token, nil
