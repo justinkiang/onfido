@@ -117,6 +117,20 @@ type Report struct {
 	CreatedAt  time.Time              `json:"created_at"`
 }
 
+type Callback struct {
+	Payload CallbackPayload `json:"payload"`
+}
+type CallbackPayload struct {
+	Action       string `json:"action"`
+	ResourceType string `json:"resource_type"`
+	Object       struct {
+		CompletedAt time.Time `json:"completed_at"`
+		Href        string    `json:"href"`
+		ID          string    `json:"id"`
+		Status      string    `json:"status"`
+	} `json:"object"`
+}
+
 // func (r *Report) DrivingRecord() *DrivingRecord {
 // 	return nil
 // }
