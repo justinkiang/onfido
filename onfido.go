@@ -14,6 +14,7 @@ import (
 var (
 	applicantBaseURL = "https://api.onfido.com/v2/applicants"
 	checkBaseURL     = "https://api.onfido.com/v2/applicants"
+	reportBaseURL    = "https://api.onfido.com/v2/checks"
 	sdkToeknBaseURL  = "https://api.onfido.com/v2/sdk_token"
 	expandParam      = &url.Values{}
 )
@@ -69,9 +70,9 @@ func (c *Client) SDKToken(appID, referrer string) (SDKToken, error) {
 	apiErr := APIError{}
 
 	token := SDKToken{}
-	payload := struct{
+	payload := struct {
 		ApplicantId string `json:"applicant_id"`
-		Referrer string `json:"referrer"`
+		Referrer    string `json:"referrer"`
 	}{
 		appID,
 		referrer,
@@ -155,6 +156,19 @@ func (c *Client) ReadCheck(appID, checkID string) (*Check, error) {
 	return &check, nil
 }
 
+func (c *Client) ReadReport(url string) (*Report, error) {
+	s := c.newSession()
+	apiErr := APIError{}
+	report := Report{}
+	res, err := s.Get(url, expandParam, &report, &apiErr)
+	if err != nil {
+		return nil, err
+	}
+	if res.Status() != 200 {
+		return nil, &apiErr
+	}
+	return &report, nil
+}
 func (c *Client) ReadChecks(appID string) ([]*Check, error) {
 	s := c.newSession()
 	apiErr := APIError{}
