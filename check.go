@@ -16,6 +16,7 @@ type ReportRequest struct {
 type CheckRequest struct {
 	Type    string          `json:"type"`
 	Reports []ReportRequest `json:"reports"`
+	Tags    []string        `json:"tags"`
 }
 
 type Check struct {
