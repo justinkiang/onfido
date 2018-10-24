@@ -124,7 +124,6 @@ type CallbackPayload struct {
 	Action       string `json:"action"`
 	ResourceType string `json:"resource_type"`
 	Object       struct {
-		CompletedAt time.Time `json:"completed_at"`
 		Href        string    `json:"href"`
 		ID          string    `json:"id"`
 		Status      string    `json:"status"`
