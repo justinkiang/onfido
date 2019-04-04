@@ -9,6 +9,9 @@ import (
 	"time"
 
 	"github.com/jmcvetta/napping"
+    "image"
+    "bytes"
+    "image/jpeg"
 )
 
 var (
@@ -132,6 +135,27 @@ func (c *Client) GetLivePhotos(appID string) ([]LivePhoto, error){
         return nil, &apiErr
     }
     return a.LivePhotos, nil
+}
+func (c *Client) GetFile(url string)(){
+    httpClient := http.Client{}
+
+    req := http.Request{}
+    req.Header.Set("Authorization", c.apiTokenHeader)
+
+    response, err := httpClient.Do(&req)
+    fmt.Println(err)
+    defer response.Body.Close()
+    m, _, err := image.Decode(response.Body)
+
+    fmt.Println(err)
+    buf := new(bytes.Buffer)
+    err = jpeg.Encode(buf, m, nil)
+
+    fmt.Println(err)
+    fmt.Println(buf.String())
+    //send_s3 := buf.Bytes()
+    //imgBase64Str := base64.StdEncoding.EncodeToString(response.Body)
+
 }
 func (c *Client) GetDocuments(appID string) ([]Document, error) {
     s := c.newSession()
