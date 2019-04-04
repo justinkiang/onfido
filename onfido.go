@@ -16,6 +16,7 @@ var (
 	checkBaseURL     = "https://api.onfido.com/v2/applicants"
 	reportBaseURL    = "https://api.onfido.com/v2/checks"
 	sdkToeknBaseURL  = "https://api.onfido.com/v2/sdk_token"
+	livePhotoBaseURL = "https://api.onfido.com/v2/live_photos"
 	expandParam      = &url.Values{}
 )
 
@@ -115,6 +116,35 @@ func (c *Client) ReadApplicant(id string) (*Applicant, error) {
 		return nil, &apiErr
 	}
 	return &a, nil
+}
+
+func (c *Client) GetLivePhotos(appID string) ([]LivePhoto, error){
+    s := c.newSession()
+    apiErr := APIError{}
+    a := livePhotosResponse{}
+    q := url.Values{}
+    q.Add("applicant_id",appID)
+    res, err := s.Get(livePhotoBaseURL, &q, &a, &apiErr)
+    if err != nil {
+        return nil, err
+    }
+    if res.Status() != 200 {
+        return nil, &apiErr
+    }
+    return a.LivePhotos, nil
+}
+func (c *Client) GetDocuments(appID string) ([]Document, error) {
+    s := c.newSession()
+    apiErr := APIError{}
+    a := documentsResponse{}
+    res, err := s.Get(assembleURL(checkBaseURL, appID, "documents"), &url.Values{}, &a, &apiErr)
+    if err != nil {
+        return nil, err
+    }
+    if res.Status() != 200 {
+        return nil, &apiErr
+    }
+    return a.Documents, nil
 }
 func (c *Client) ReadApplicants() ([]*Applicant, error) {
 	s := c.newSession()

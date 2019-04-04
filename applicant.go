@@ -54,3 +54,11 @@ type Applicant struct {
 type applicantsResponse struct {
 	Applicants []*Applicant `json:"applicants"`
 }
+
+type livePhotosResponse struct {
+    LivePhotos []LivePhoto `json:"live_photos"`
+}
+
+type documentsResponse struct{
+    Documents []Document `json:"documents"`
+}

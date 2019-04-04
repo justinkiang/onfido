@@ -130,6 +130,21 @@ type CallbackPayload struct {
 	} `json:"object"`
 }
 
+type Document struct {
+    ID string `bson:"id" json:"id"`
+    CreatedAt time.Time `bson:"created_at" json:"created_at"`
+    Type string `bson:"type" json:"type"`
+    Side string `bson:"side" json:"side"`
+    Href string `bson:"href" json:"href"`
+    OnfidoDownloadHref string `json:"download_href"`
+}
+
+type LivePhoto struct{
+    ID string `bson:"id" json:"id"`
+    CreatedAt time.Time `bson:"created_at" json:"created_at"`
+    Href string `bson:"href" json:"href"`
+    OnfidoDownloadHref string `json:"download_href"`
+}
 // func (r *Report) DrivingRecord() *DrivingRecord {
 // 	return nil
 // }
