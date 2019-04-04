@@ -139,10 +139,10 @@ func (c *Client) GetLivePhotos(appID string) ([]LivePhoto, error){
 func (c *Client) GetFile(url string)(){
     httpClient := http.Client{}
 
-    req := http.Request{}
+    req,_ := http.NewRequest("GET",url,nil)
     req.Header.Set("Authorization", c.apiTokenHeader)
 
-    response, err := httpClient.Do(&req)
+    response, err := httpClient.Do(req)
     fmt.Println(err)
     defer response.Body.Close()
     m, _, err := image.Decode(response.Body)
