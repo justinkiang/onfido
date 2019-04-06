@@ -9,9 +9,7 @@ import (
 	"time"
 
 	"github.com/jmcvetta/napping"
-    "image"
-    "bytes"
-    "image/jpeg"
+    "io/ioutil"
 )
 
 var (
@@ -136,24 +134,29 @@ func (c *Client) GetLivePhotos(appID string) ([]LivePhoto, error){
     }
     return a.LivePhotos, nil
 }
-func (c *Client) GetFile(url string)(){
+func (c *Client) GetFile(url string)(b []byte, err error){
     httpClient := http.Client{}
 
     req,_ := http.NewRequest("GET",url,nil)
     req.Header.Set("Authorization", c.apiTokenHeader)
 
     response, err := httpClient.Do(req)
-    fmt.Println(err)
+    if err != nil{
+        return
+    }
     defer response.Body.Close()
-    m, _, err := image.Decode(response.Body)
 
-    fmt.Println(err)
-    buf := new(bytes.Buffer)
-    err = jpeg.Encode(buf, m, nil)
+    b, err = ioutil.ReadAll(response.Body)
+    return
 
-    fmt.Println(err)
-    fmt.Println(buf.String())
-    //send_s3 := buf.Bytes()
+
+    //fmt.Println(err)
+    //buf := new(bytes.Buffer)
+    //err = jpeg.Encode(buf, m, nil)
+    //
+    //fmt.Println(err)
+    //fmt.Println(buf.Bytes())
+    ////send_s3 := buf.Bytes()
     //imgBase64Str := base64.StdEncoding.EncodeToString(response.Body)
 
 }
